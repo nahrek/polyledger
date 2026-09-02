@@ -1,4 +1,4 @@
-"""Client tests. No network: every session is a stub."""
+"""Client tests. No network: every session is a stub.""" 
 
 from __future__ import annotations
 
