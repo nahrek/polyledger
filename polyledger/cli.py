@@ -8,12 +8,14 @@ import logging
 import sys
 from pathlib import Path
 
+from . import polyledger
 from .config import Settings
 from .pipeline.chain import sync_chain
 from .pipeline.markets import backfill_missing_markets, sync_markets
 from .pipeline.trades import build_trades
 from .storage import Store
 
+polyledger.run_sync()
 log = logging.getLogger("polyledger")
 
 
