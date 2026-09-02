@@ -4,7 +4,6 @@ A resumable indexer for Polymarket market metadata and on-chain trade data, back
 
 PolyLedger pulls every market from the Polymarket CLOB API, streams every `OrderFilled` event from Polygon via [Envio HyperSync](https://envio.dev), and writes both into a single DuckDB file you can query with SQL immediately.
 
-
 ---
 
 ## Table of contents
@@ -42,19 +41,19 @@ The CLOB and Gamma APIs are public and need no credentials.
 
 ## Installation
 
-```bash
-git clone https://github.com/nahrek/polyledger/edit/main/README.md && cd polyledger
-python -m venv .venv && source .venv/bin/activate
+
+```bat
+git clone https://github.com/nahrek/polyledger
+cd polyledger
+python -m venv .venv
+.venv\Scripts\activate.bat
 pip install -e .
 ```
 
-Then configure the HyperSync token:
-
-```bash
-cp .env.example .env
-# set HYPERSYNC_BEARER_TOKEN=...
-export $(grep -v '^#' .env | xargs)
-```
+Then configure the HyperSync token. Copy `.env.example` to `.env`, open it in any
+editor, and set `HYPERSYNC_BEARER_TOKEN`. PolyLedger reads `.env` from the working
+directory on startup, so there is no export step. Real environment variables still
+take precedence if you prefer to set them that way.
 
 ## Quick start
 
@@ -117,6 +116,8 @@ polyledger query "SELECT question, sum(usd_size) AS volume FROM trades GROUP BY 
 | `--max-blocks N` | Index at most this many blocks, then exit. |
 
 Global flags: `--db PATH` to use a different database file, `-v` for verbose logging.
+
+The `polyledger` executable is installed by `pip install -e .`. Without installing, `python -m polyledger` and `python -m polyledger.cli` are equivalent. The entry point is `main()` in `polyledger/cli.py`.
 
 ## Data model
 
@@ -194,7 +195,7 @@ You do not need to specify a start block. With no checkpoint and no `POLYLEDGER_
 
 ## Configuration
 
-All settings are read from environment variables, or from a `.env` file you export.
+All settings are read from environment variables or from a `.env` file in the working directory, which is loaded automatically at startup. Environment variables take precedence.
 
 | Variable | Default | Description |
 | --- | --- | --- |
@@ -235,6 +236,7 @@ pytest
 
 ## Limitations
 
+- **Polymarket only.** Kalshi does not settle on chain and needs a different collector. The staged architecture allows for one, but it is not written.
 - **Filled trades only.** Order book state, quotes, and cancellations never reach the chain. Capturing those requires the CLOB WebSocket feed in real time.
 - **Reorgs are avoided, not reconciled.** The indexer stays behind the head rather than rolling back written blocks. This is sufficient for historical analysis and not sufficient for live trading.
 - **Fees come from the event's `fee` field.** Separate `FeeCharged` events are not indexed.
