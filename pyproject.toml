@@ -1,0 +1,29 @@
+[project]
+name = "polyledger"
+version = "0.1.0"
+description = "Resumable Polymarket market and on-chain trade indexer backed by DuckDB"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+dependencies = [
+    "hypersync>=0.9",
+    "duckdb>=1.0",
+    "httpx>=0.27",
+    "pydantic>=2.6",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "pytest-asyncio>=0.23"]
+
+[project.scripts]
+polyledger = "polyledger.cli:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["polyledger*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
