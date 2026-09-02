@@ -1,4 +1,4 @@
-"""PolyLedger command line interface."""
+"""PolyLedger command line interface.""" 
 
 from __future__ import annotations
 
