@@ -1,4 +1,4 @@
-"""PolyLedger command line interface.""" 
+"""PolyLedger command line interface."""
 
 from __future__ import annotations
 
@@ -20,6 +20,16 @@ log = logging.getLogger("polyledger")
 
 
 def _setup_logging(verbose: bool) -> None:
+    # The Windows console still defaults to a legacy code page, and DuckDB
+    # prints results in box-drawing characters. Without this, `query` dies with
+    # a UnicodeEncodeError instead of showing the table.
+    for stream in (sys.stdout, sys.stderr):
+        if hasattr(stream, "reconfigure"):
+            try:
+                stream.reconfigure(encoding="utf-8", errors="replace")
+            except (OSError, ValueError):
+                pass
+
     logging.basicConfig(
         level=logging.DEBUG if verbose else logging.INFO,
         format="%(asctime)s %(levelname)-7s %(name)s | %(message)s",
