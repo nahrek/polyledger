@@ -330,8 +330,12 @@ class Store:
         written: list[Path] = []
         for name in ("markets", "tokens", "order_fills", "trades"):
             path = target / f"{name}.parquet"
+            # DuckDB takes the destination as a SQL string literal, and a
+            # Windows path is full of backslashes. Forward slashes work on
+            # every platform.
+            literal = path.as_posix().replace("'", "''")
             self.con.execute(
-                f"COPY (SELECT * FROM {name}) TO '{path}' "
+                f"COPY (SELECT * FROM {name}) TO '{literal}' "
                 "(FORMAT PARQUET, COMPRESSION ZSTD)"
             )
             written.append(path)
