@@ -43,7 +43,7 @@ The CLOB and Gamma APIs are public and need no credentials.
 ## Installation
 
 ```bash
-git clone <repo> && cd polyledger
+git clone https://github.com/nahrek/polyledger/edit/main/README.md && cd polyledger
 python -m venv .venv && source .venv/bin/activate
 pip install -e .
 ```
