@@ -4,7 +4,6 @@ A resumable indexer for Polymarket market metadata and on-chain trade data, back
 
 PolyLedger pulls every market from the Polymarket CLOB API, streams every `OrderFilled` event from Polygon via [Envio HyperSync](https://envio.dev), and writes both into a single DuckDB file you can query with SQL immediately.
 
-*[Читать на русском](README.ru.md).*
 
 ---
 
@@ -199,7 +198,7 @@ All settings are read from environment variables, or from a `.env` file you expo
 
 | Variable | Default | Description |
 | --- | --- | --- |
-| `HYPERSYNC_BEARER_TOKEN` | — | Envio API token. Required |
+| `HYPERSYNC_BEARER_TOKEN` | - | Envio API token. Required |
 | `POLYLEDGER_DB` | `data/polyledger.duckdb` | Database file path |
 | `POLYLEDGER_EXPORT_DIR` | `data/parquet` | Parquet export directory |
 | `POLYLEDGER_CONTRACTS` | `v2` | `v2`, `v1`, or `all` |
@@ -236,7 +235,6 @@ pytest
 
 ## Limitations
 
-- **Polymarket only.** Kalshi does not settle on chain and needs a different collector. The staged architecture allows for one, but it is not written.
 - **Filled trades only.** Order book state, quotes, and cancellations never reach the chain. Capturing those requires the CLOB WebSocket feed in real time.
 - **Reorgs are avoided, not reconciled.** The indexer stays behind the head rather than rolling back written blocks. This is sufficient for historical analysis and not sufficient for live trading.
 - **Fees come from the event's `fee` field.** Separate `FeeCharged` events are not indexed.
