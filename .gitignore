@@ -1,0 +1,11 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+data/
+*.duckdb
+*.duckdb.wal
+*.parquet
+.pytest_cache/
+.ipynb_checkpoints/
