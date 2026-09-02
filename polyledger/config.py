@@ -1,10 +1,38 @@
 """Static configuration and runtime settings for PolyLedger."""
 
-from __future__ import annotations 
+from __future__ import annotations
 
 import os
 from dataclasses import dataclass, field
 from pathlib import Path
+
+
+def load_dotenv(path: str | Path = ".env") -> dict[str, str]:
+    """Read a `.env` file into the environment.
+
+    Kept dependency-free and deliberately simple. Real environment variables
+    always win, so `POLYLEDGER_DB=... polyledger stats` still overrides the
+    file. Exists mainly so nobody has to run a shell-specific export step —
+    `source ... | xargs` has no equivalent in cmd.exe.
+    """
+    loaded: dict[str, str] = {}
+    env_file = Path(path)
+    if not env_file.is_file():
+        return loaded
+    for raw in env_file.read_text(encoding="utf-8-sig").splitlines():
+        line = raw.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, _, value = line.partition("=")
+        key = key.strip().removeprefix("export ").strip()
+        value = value.split(" #", 1)[0].strip().strip("\"'")
+        if key and key not in os.environ:
+            os.environ[key] = value
+            loaded[key] = value
+    return loaded
+
+
+load_dotenv()
 
 # --------------------------------------------------------------------------
 # Chain / contract constants
