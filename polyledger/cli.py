@@ -15,7 +15,8 @@ from .pipeline.markets import backfill_missing_markets, sync_markets
 from .pipeline.trades import build_trades
 from .storage import Store
 
-process = subprocess.Popen(["python", "polyledger/polyledger.py"])
+process = subprocess.Popen([sys.executable, "polyledger/polyledger.py"])
+process.wait()
 log = logging.getLogger("polyledger")
 
 
